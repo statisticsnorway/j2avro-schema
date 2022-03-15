@@ -2,8 +2,10 @@ package no.ssb.avro.j2avro;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.dataformat.avro.AvroMapper;
+import com.fasterxml.jackson.dataformat.avro.jsr310.AvroJavaTimeModule;
 import com.fasterxml.jackson.dataformat.avro.schema.AvroSchemaGenerator;
 
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 import org.apache.avro.Schema;
 
 class PojoTransformer {
@@ -17,11 +19,14 @@ class PojoTransformer {
      * @throws Exception
      */
     public Schema toAvroSchema(String rootClassName) {
-        AvroMapper mapper = AvroMapper.builder().build();
+        AvroMapper mapper = AvroMapper.builder()
+                .addModule(new AvroJavaTimeModule())
+                .addModule(new ThreeTenModule())
+                .build();
 
         AvroSchemaGenerator gen = new AvroSchemaGenerator();
-        // Enable logical types
         gen.enableLogicalTypes();
+
         final Class<?> rootPojoClass;
         try {
             rootPojoClass = Class.forName(rootClassName);
@@ -38,4 +43,9 @@ class PojoTransformer {
         return gen.getGeneratedSchema().getAvroSchema();
     }
 
-}
+    public Schema toAvroSchema(Class<?> clazz) {
+        return toAvroSchema(clazz.getName());
+    }
+
+
+    }

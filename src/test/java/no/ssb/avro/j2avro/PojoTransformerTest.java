@@ -1,13 +1,14 @@
 package no.ssb.avro.j2avro;
 
 import org.apache.avro.Schema;
+import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 class PojoTransformerTest {
 
     @Test
-    void testToAvroSchema() throws Exception {
+    void testToAvroSchema() throws JSONException {
         PojoTransformer transformer = new PojoTransformer();
         Schema avroSchema = transformer.toAvroSchema(SomePojoRoot.class.getName());
         //System.out.println(avroSchema.toString(true));
