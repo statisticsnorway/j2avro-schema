@@ -47,5 +47,4 @@ class PojoTransformer {
         return toAvroSchema(clazz.getName());
     }
 
-
-    }
+}
