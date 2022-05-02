@@ -7,14 +7,14 @@
   <packaging>jar</packaging>
 
   <properties>
-    <java.version>11</java.version>
+    <java.version>17</java.version>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <artifact-registry.url>artifactregistry://europe-north1-maven.pkg.dev/artifact-registry-14da</artifact-registry.url>
 
     <!-- Dependency versions -->
     <assertj.version>3.22.0</assertj.version>
-    <jackson.version>2.13.1</jackson.version>
+    <jackson.version>2.13.2</jackson.version>
     <jackson-threetenbp.version>2.13.0-rc2</jackson-threetenbp.version>
     <junit.version>5.8.2</junit.version>
     <logback.version>1.2.10</logback.version>
@@ -46,6 +46,11 @@
   </scm>
 
   <dependencies>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>3.0.2</version>
+    </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
@@ -168,6 +173,18 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>${maven-shade-plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>9.2</version>
+          </dependency>
+          <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
+            <version>9.2</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <phase>package</phase>
@@ -183,10 +200,6 @@
               </transformers>
               <minimizeJar>false</minimizeJar>
               <relocations>
-                <relocation>
-                  <pattern>com.fasterxml.jackson</pattern>
-                  <shadedPattern>no.ssb.avro.j2avro.shaded.com.fasterxml.jackson</shadedPattern>
-                </relocation>
                 <relocation>
                   <pattern>picocli</pattern>
                   <shadedPattern>no.ssb.avro.j2avro.shaded.picocli</shadedPattern>
@@ -234,42 +247,6 @@
   </repositories>
 
   <profiles>
-    <profile>
-      <id>generate-java-from-openapi</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.openapitools</groupId>
-            <artifactId>openapi-generator-maven-plugin</artifactId>
-            <!-- RELEASE_VERSION -->
-            <version>${openapi-generator-maven-plugin.version}</version>
-            <!-- /RELEASE_VERSION -->
-            <executions>
-              <execution>
-                <goals>
-                  <goal>generate</goal>
-                </goals>
-                <configuration>
-                  <inputSpec>${project.basedir}/src/main/resources/openapi/skatt-naering/NaeringsspesifikasjonOASapi_v1.json</inputSpec>
-                  <generatorName>java</generatorName>
-                  <generateApis>false</generateApis>
-                  <generateModels>true</generateModels>
-                  <generateModelTests>false</generateModelTests>
-                  <modelPackage>no.ssb.openapi.skatt.naering</modelPackage>
-                  <addCompileSourceRoot>false</addCompileSourceRoot>
-                  <groupId>no.ssb.openapi.skatt.naering</groupId>
-                  <artifactId>skatt-naering-java</artifactId>
-                  <artifactVersion>0.0.1-SNAPSHOT</artifactVersion>
-                  <configOptions>
-                    <sourceFolder>src/main/java</sourceFolder>
-                  </configOptions>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
     <profile>
       <id>ssb-bip</id>
       <distributionManagement>
