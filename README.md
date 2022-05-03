@@ -41,5 +41,5 @@ cp blah/target/blah-1.0.0-SNAPSHOT.jar .
 
 #### Generate avro schema from POJOs
 ```shell
-java -cp blah-1.0.0-SNAPSHOT.jar:j2avro-schema-x.x.x.jar no.ssb.avro.j2avro.Cli --root-type no.ssb.blah.SomeRoot > blah.avsc
+java -cp blah-1.0.0-SNAPSHOT.jar:j2avro-schema-x.x.x.jar no.ssb.avro.j2avro.Cli --root-type no.ssb.openapi.blah.SomeRoot > blah.avsc
 ```
